@@ -1,0 +1,23 @@
+  <div class="row">
+    <div class="col-lg-12">
+      <section class="panel">
+        <header class="panel-heading">
+          Inline Editor
+        </header>
+        <div class="panel-body">
+          <div id="editor-container">
+            <div id="header-editor">
+              <h2 id="sampleTitle" style="color:#ff6c60">Stats</h2>
+              <h3>Some useful scripts to get cpu and mem usage</h3>
+            </div>
+            <div>
+              <div>
+                <h3>Execute the following</h3>
+                <p><code>// vmstat</br>vmstat -s | awk  ' $0 ~ /total memory/ {total=$1 } $0 ~/free memory/ {free=$1} $0 ~/buffer memory/ {buffer=$1} $0 ~/cache/ {cache=$1} END {print (total-free-buffer-cache)/total*100}'</br>// top</br>top -b -n 5 -d.2 | grep "Cpu" | tail -n1 | awk '{print($2)}' | cut -d'%' -f 1</code></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>

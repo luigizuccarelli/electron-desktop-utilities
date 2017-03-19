@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en"> 
+  <head>
+    <meta charset="utf-8">
+    <title>lmz-dev desktop utilities</title>
+
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-reset.css" rel="stylesheet">
+    <link href="css/font-awesome.css" rel="stylesheet" />
+    <link href="css/responsive.css" rel="stylesheet" />
+    <link href="css/notie.css" rel="stylesheet" />
+    <link href="css/local-style.css" rel="stylesheet" />
+    <link href="css/medium-editor.css" rel="stylesheet">
+    <link href="css/themes/default.css">
+    <link href="css/tasks.css" rel="stylesheet">
+
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,100,‌​100italic,300,300ita‌​lic,400italic,500,50‌​0italic,700,700itali‌​c,900italic,900' rel='stylesheet' type='text/css'>
+  </head>
+  <body>
+
+    <section id="container">
+      <div id="header">&nbsp;</div>
+      <aside>
+       <div tabindex="5000" style="overflow: hidden;" id="sidebar" class="nav-collapse">&nbsp;</div>
+      </aside>
+      <section id="main-content">
+        <section class="wrapper">
+          <div id="template-contents" class="editable">
+          <div class="row">
+            <div class="col-lg-12">
+              <section class="panel">
+                <header class="panel-heading">
+                  Inline Editor
+                </header>
+                <div class="panel-body">
+                  <div id="editor-container">
+                    <div id="header-editor">
+                      <h2 id="sampleTitle" style="color:#ff6c60" >
+                        Desktop Utilities</h2>
+                      <h3 >
+                        A simple easy to use knowledge base,todo list and other WIP </h3>
+                    </div>
+                    <div>
+                      <div >
+                        <h3 style="color:#ff6c60">Introduction</h3>
+                        <p><strong>Knowledge Base</strong></p>
+                        <p>The knowledge base is a set of howto,articles, reference and technical documents to <a href="#">assist</a> the user/developer </p>
+                        <p>Start by clicking on the <a>Create</a> button below and then select a simple or complex template</p> 
+                        <p>Once the template has loaded enable the inline html editor by clicking on <a>Editor</a></p>
+                        <p>The updated document can then be saved in the desired category directory <a>Save</a></p>
+                        <p>Rename the categories as desired - remember that all directories and file names are case sensitive</p>
+                        <p>&nbsp;</p>
+                        <p><strong>Todo List</strong></p>
+                        <p>A day based todo list (based on the current day saved using yyyymmdd format)</p>
+                        <p>Click on the <a>Todo List</a> menu item</p>
+                        <p>Start by clicking on <a>Add New Task</a> button</p> 
+                        <p>Enter the item with a title, status and a label all sepereated by a ','</p>
+                        <p>Status can be anything really - usually time related now,today,tomorrow, 2 days etc</p>
+                        <p>Labels are on of [danger,success,info,primary,warning and inverse]</p>
+                        <p>Click on the items on the right of each task to <a>complete</a> or <a>edit</a></p>
+                        <p>&nbsp;</p>
+                        <p>Change and destroy as you see fit - Have fun LMZ 2017</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+          </div>
+        </section>
+        <div id="action-items" style="margin-left:20px">
+          <button type="button" class="btn btn-success" onclick="editPage();">&nbsp;&nbsp;Editor&nbsp;&nbsp;</button>&nbsp;&nbsp;
+          <button type="button" class="btn btn-warning" onclick="createPage();">&nbsp;&nbsp;Create&nbsp;&nbsp;</button>&nbsp;&nbsp;
+          <button type="button" class="btn btn-info" onclick="savePage();">&nbsp;&nbsp;Save&nbsp;&nbsp;</button>&nbsp;&nbsp;
+          <button type="button" class="btn btn-danger" onclick="viewPage();">View</button>
+        </div>
+      </section>
+    </section>
+
+    <script src="js/desktop-utilities.js"></script>
+    <script src="js/medium-editor.js"></script>
+
+    <script>
+
+      // system libs
+      const exec = require('child_process').exec;
+      const notie = require('./js/notie.js');
+      const fs = require('fs');
+      const bunyan = require('bunyan');
+      const log = bunyan.createLogger({name: "desktop-utilities",stream: process.stdout,level: "debug"});
+      let contents = "";
+      let editor = null;
+
+      // startup calls
+
+      includeHtml();
+      buildMenu();
+      log.info('Starting application desktop-utilities');
+
+    </script>
+  
+</body>
+</html>
