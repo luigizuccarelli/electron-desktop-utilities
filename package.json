@@ -1,17 +1,16 @@
 {
-  "name": "lmz-dev-dashboard",
+  "name": "lmz-desktop-utilities",
   "version": "1.0.0",
-  "description": "Electron OSCP dashboard for development",
+  "description": "Electron desktop utilities",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
   },
-  "repository": "https://github.com/electron/electron-quick-start",
+  "repository": "https://github.com/luigizuccarelli/electron-desktop-utilities",
   "keywords": [
     "lmz",
-    "dev",
-    "oscp",
-    "dashboard"
+    "desktop",
+    "utilities"
   ],
   "author": "LMZ",
   "license": "TBD",
