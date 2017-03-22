@@ -67,7 +67,8 @@ function toggleMenu(id) {
  */
 function loadContent(file) {
   let inline = document.getElementById('template-contents');
-  let dateFormat = formatDate();
+  let dateFormatToday = formatDate(0);
+  let dateFormatYesterday = formatDate(1);
 
   if (file.indexOf('todo') >= 0) {
     // load the template file
@@ -76,14 +77,21 @@ function loadContent(file) {
     inline.innerHTML = contents
     // check if we have cached data
     
-    if (fs.existsSync('data/todo-list-' + dateFormat + '.html')) {
-      let data = fs.readFileSync('data/todo-list-' + dateFormat + '.html').toString();
-      let el = document.getElementById('task-list');
+    if (fs.existsSync('data/todo-list-' + dateFormatToday + '.html')) {
+      let data = fs.readFileSync('data/todo-list-' + dateFormatToday + '.html').toString();
+      let el = document.getElementById('task-list-today');
+      el.innerHTML = data;
+    }
+    if (fs.existsSync('data/todo-list-' + dateFormatYesterday + '.html')) {
+      data = fs.readFileSync('data/todo-list-' + dateFormatYesterday + '.html').toString();
+      el = document.getElementById('task-list-yesterday');
       el.innerHTML = data;
     }
   }
-  let header = document.getElementById('todo-list-header');
-  header.innerHTML = "Todo List - " + dateFormat;
+  let header = document.getElementById('todo-list-header-today');
+  header.innerHTML = "Todo List - " + dateFormatToday;
+  header = document.getElementById('todo-list-header-yesterday');
+  header.innerHTML = "Todo List - " + dateFormatYesterday;
   let actionItems = document.getElementById('action-items');
   actionItems.style.display = "none";
 }
@@ -194,7 +202,7 @@ function viewPage() {
  * 
  * @returns void
  */
-function addTask() {
+function addTask(day) {
   notie.input({
     type: 'text',
     text: 'Enter a task item with status code (i.e now,today,future) and label type [success,danger,warning,primary,inverse,info] ',
@@ -205,9 +213,14 @@ function addTask() {
     submitCallback: function (value) {
       contents = fs.readFileSync('templates/task-template.html').toString();
       let newTask = contents.replace("{{ item }}",value.split(",")[0]).replace("{{ status }}",value.split(",")[1]).replace("{{ label }}",value.split(",")[2]);
-      let taskList = document.getElementById('task-list');
+      let taskList = document.getElementById('task-list-' + day);
       taskList.innerHTML = taskList.innerHTML + newTask;
-      let dateFormat = formatDate();
+      if (day === 'today') {
+        let dateFormat = formatDate(0);
+      } else {
+        let dateFormat = formatDate(1);
+      }
+
       fs.writeFileSync('data/todo-list-' + dateFormat + '.html', taskList.innerHTML);
     }
   })
@@ -260,10 +273,10 @@ function completeTask(control) {
  * 
  * @returns date format as string (yyyymmdd)
  */
-function formatDate() {
+function formatDate(day) {
   let date = new Date();
   let mm = (date.getMonth() +1);
-  let dd = date.getDate();
+  let dd = date.getDate() - day;
   if (mm < 10) mm = "0" + mm;
   if (dd < 10) mm = "0" + dd;
   return "" + date.getFullYear() + mm + dd;
