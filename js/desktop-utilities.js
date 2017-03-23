@@ -8,8 +8,45 @@
  
 
 
-const KNOWLEDGEBASE_DIR = "./knowledge-base";
+const KNOWLEDGEBASE_DIR = "knowledge-base";
 const TODO_TEMPLATE = "todo-template.html";
+
+function init() {
+  if (config.remote_store) {
+    exec("scp -r " + config.user + "@" + config.host + ":" + config.default_dir + "/" + KNOWLEDGEBASE_DIR + "/* ./" + KNOWLEDGEBASE_DIR  , (error, stdout, stderr) => {
+      if (error) {
+        log.error(`exec error: ${error}`);
+        return;
+      }
+    
+      exec("scp -r " + config.user + "@" + config.host + ":" + config.default_dir + "/data/* ./data/"  , (error, stdout, stderr) => {
+        if (error) {
+          log.error(`exec error: ${error}`);
+          return;
+        }
+      });
+    });
+  }
+}
+
+function sync() {
+  if (config.remote_store) {
+    exec("scp -r ./" + KNOWLEDGEBASE_DIR + "/*" + config.user + "@" + config.host + ":" + config.default_dir + "/" + KNOWLEDGEBASE_DIR + "/"   , (error, stdout, stderr) => {
+      if (error) {
+        log.error(`exec error: ${error}`);
+        return;
+      }
+    });
+
+    exec("scp -r ./data/*" + config.user + "@" + config.host + ":" + config.default_dir + "/data/"  , (error, stdout, stderr) => {
+      if (error) {
+        log.error(`exec error: ${error}`);
+        return;
+      }
+    });
+  }
+}
+
 
 /* Simple html include  - really do we need more commenting ? */
 function includeHtml() {
@@ -27,7 +64,8 @@ function includeHtml() {
  */
 function buildMenu() {
   // 2 Level deep traversal only - dont dig it - haters gonna hate - then change it
-  let dirs = fs.readdirSync(KNOWLEDGEBASE_DIR); 
+  
+  let dirs = fs.readdirSync("./"+KNOWLEDGEBASE_DIR); 
   let sHtml = "";
   for (let dir = 0; dir < dirs.length ; dir++) {
     let files = fs.readdirSync(KNOWLEDGEBASE_DIR + "/" + dirs[dir]);

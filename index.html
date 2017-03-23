@@ -89,6 +89,7 @@
 
       // system libs
       const exec = require('child_process').exec;
+      const config = require('./config.json');
       const notie = require('./js/notie.js');
       const fs = require('fs');
       const bunyan = require('bunyan');
@@ -98,6 +99,7 @@
 
       // startup calls
 
+      init();
       includeHtml();
       buildMenu();
       log.info('Starting application desktop-utilities');
