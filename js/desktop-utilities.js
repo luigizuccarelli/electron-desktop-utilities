@@ -29,16 +29,20 @@ function init() {
   }
 }
 
-function sync() {
+function syncKB() {
   if (config.remote_store) {
-    exec("scp -r ./" + KNOWLEDGEBASE_DIR + "/*" + config.user + "@" + config.host + ":" + config.default_dir + "/" + KNOWLEDGEBASE_DIR + "/"   , (error, stdout, stderr) => {
+    exec("scp -r ./" + KNOWLEDGEBASE_DIR + "/* " + config.user + "@" + config.host + ":" + config.default_dir + "/" + KNOWLEDGEBASE_DIR + "/"   , (error, stdout, stderr) => {
       if (error) {
         log.error(`exec error: ${error}`);
         return;
       }
     });
+  }
+}
 
-    exec("scp -r ./data/*" + config.user + "@" + config.host + ":" + config.default_dir + "/data/"  , (error, stdout, stderr) => {
+function syncTodo(format) {
+  if (config.remote_store) {
+    exec("scp -r ./data/" + format + "/* " + config.user + "@" + config.host + ":" + config.default_dir + "/data/" + format + "/"  , (error, stdout, stderr) => {
       if (error) {
         log.error(`exec error: ${error}`);
         return;
@@ -107,6 +111,8 @@ function loadContent(file) {
   let inline = document.getElementById('template-contents');
   let dateFormatToday = formatDate(0);
   let dateFormatYesterday = formatDate(1);
+  let dateYearMonth = formatYearMonth();
+
 
   if (file.indexOf('todo') >= 0) {
     // load the template file
@@ -114,14 +120,20 @@ function loadContent(file) {
     // add it
     inline.innerHTML = contents
     // check if we have cached data
+
+    try {
+      fs.mkdirSync('data/' + dateYearMonth);
+    } catch(e) {
+      if ( e.code != 'EEXIST' ) throw e;
+    }
     
-    if (fs.existsSync('data/todo-list-' + dateFormatToday + '.html')) {
-      let data = fs.readFileSync('data/todo-list-' + dateFormatToday + '.html').toString();
+    if (fs.existsSync('data/' + dateYearMonth + '/todo-list-' + dateFormatToday + '.html')) {
+      let data = fs.readFileSync('data/' + dateYearMonth + '/todo-list-' + dateFormatToday + '.html').toString();
       let el = document.getElementById('task-list-today');
       el.innerHTML = data;
     }
-    if (fs.existsSync('data/todo-list-' + dateFormatYesterday + '.html')) {
-      data = fs.readFileSync('data/todo-list-' + dateFormatYesterday + '.html').toString();
+    if (fs.existsSync('data/' + dateYearMonth + '/todo-list-' + dateFormatYesterday + '.html')) {
+      data = fs.readFileSync('data/' + dateYearMonth + '/todo-list-' + dateFormatYesterday + '.html').toString();
       el = document.getElementById('task-list-yesterday');
       el.innerHTML = data;
     }
@@ -166,7 +178,9 @@ function savePage() {
       notie.alert({ type: 3, text: 'Contents not saved' })
     },
     submitCallback: function (value) {
-      fs.writeFileSync(KNOWLEDGEBASE_DIR + "/" + value, inline.innerHTML);
+      fs.writeFileSync("./" + KNOWLEDGEBASE_DIR + "/" + value, inline.innerHTML);
+      // sync with remote server
+      syncKB();
       // rebuild the sidebar menu
       buildMenu();
     }
@@ -258,8 +272,10 @@ function addTask(day) {
       } else {
         let dateFormat = formatDate(1);
       }
-
-      fs.writeFileSync('data/todo-list-' + dateFormat + '.html', taskList.innerHTML);
+      let format =  dateYearMonth()
+      fs.writeFileSync('data/' + format + '/todo-list-' + dateFormat + '.html', taskList.innerHTML);
+      // sync with remote server
+      syncTodo(format);
     }
   })
 }
@@ -318,6 +334,18 @@ function formatDate(day) {
   if (mm < 10) mm = "0" + mm;
   if (dd < 10) mm = "0" + dd;
   return "" + date.getFullYear() + mm + dd;
+}
+
+/**
+ * @description Format date 
+ * 
+ * @returns date format as string (yyyymm)
+ */
+function formatYearMonth() {
+  let date = new Date();
+  let mm = (date.getMonth() +1);
+  if (mm < 10) mm = "0" + mm;
+  return "" + date.getFullYear() + mm;
 }
 
 /** 
