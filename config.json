@@ -1,5 +1,5 @@
 {
-  "remote_store": true,
+  "remote_store": false,
   "host": "",
   "user": "",
   "default_dir": "/home/user/Public"
