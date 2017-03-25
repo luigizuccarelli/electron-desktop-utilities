@@ -2,5 +2,5 @@
   "remote_store": true,
   "host": "",
   "user": "",
-  "default_dir": "/home/luigi/Public"
+  "default_dir": "/home/user/Public"
 }
