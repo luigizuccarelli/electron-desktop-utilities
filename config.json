@@ -1,6 +1,6 @@
 {
   "remote_store": false,
-  "host": "",
-  "user": "",
+  "host": "lmzsoftware.ddns.net",
+  "user": "luigi",
   "default_dir": "/home/user/Public"
 }
