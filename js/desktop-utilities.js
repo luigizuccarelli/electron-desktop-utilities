@@ -263,19 +263,20 @@ function addTask(day) {
       notie.alert({ type: 3, text: 'Task not added' })
     },
     submitCallback: function (value) {
+      let dateFormat = formatDate(0);
+      let dateYearMonth = formatYearMonth();
       contents = fs.readFileSync('templates/task-template.html').toString();
       let newTask = contents.replace("{{ item }}",value.split(",")[0]).replace("{{ status }}",value.split(",")[1]).replace("{{ label }}",value.split(",")[2]);
       let taskList = document.getElementById('task-list-' + day);
       taskList.innerHTML = taskList.innerHTML + newTask;
       if (day === 'today') {
-        let dateFormat = formatDate(0);
+        dateFormat = formatDate(0);
       } else {
-        let dateFormat = formatDate(1);
+        dateFormat = formatDate(1);
       }
-      let format =  dateYearMonth()
-      fs.writeFileSync('data/' + format + '/todo-list-' + dateFormat + '.html', taskList.innerHTML);
+      fs.writeFileSync('data/' + dateYearMonth + '/todo-list-' + dateFormat + '.html', taskList.innerHTML);
       // sync with remote server
-      syncTodo(format);
+      syncTodo(dateYearMonth);
     }
   })
 }
